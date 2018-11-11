@@ -9,7 +9,7 @@
 
 \section{Introduction}
 
-The Wikipedia game \cite{www.thewikigame.com} is a path-finding challenge where a player is presented with two disparate topics and is expected to find a path between the two using links between Wikipedia pages. Due to the interconnectedness of various topics and an extremely large branching factor, there are a large variety of possible paths, and the user is rewarded for finding as short a path as possible. Our goal is to solve this game in as efficient a manner as possible.
+The Wikipedia game \cite{www.thewikigame.com} is a path-finding challenge where a player is presented with two disparate topics and is asked to find a path between the two using links between Wikipedia pages. The player's score is determined by the length of the path and the time it took to find the path (the weight each component plays in computing the final score depends on the variant being played). Due to the interconnectedness of various topics and an extremely large branching factor, there is a wide variety of possible paths. Our goal is to solve this game in as efficient a manner as possible.
 
 %A description of the purpose, goals, and scope of your system or
 %empirical investigation.  You should include references to papers you
@@ -23,18 +23,18 @@ The Wikipedia game \cite{www.thewikigame.com} is a path-finding challenge where 
 
 There has been a small amount of theoretical work done on this subject. The Wikipedia game itself is free to play from www.thewikigame.com, while there are websites online that will solve for crude solutions, such as \cite{www.sixdegreesofwikipedia.com}.
 
-There is also evidence that approaches such as combining DFS for several levels and then using BFS might be an effective solution (cite www.cs.princeton.edu/~rs/talks/PathsInGraphs07.pdf). We intend to build on this previous work and explore innovative new approaches using clustering algorithms and natural language processing.
+There is also evidence that approaches such as combining DFS for several levels and then using BFS might be an effective solution (cite www.cs.princeton.edu/~rs/talks/PathsInGraphs07.pdf) (Wait what?  That's not how I interpreted that presentation... although I suppose there can't actually be be any harm in keeping track of all neighbors of nodes previously visited as long as we don't care about space). We intend to build on this previous work and explore innovative new approaches using clustering algorithms and natural language processing.
 
 
 \section{Problem Specification}
 
-Specifically, given two Wikipedia entries the problem is to find a path between the two, with rewards determined by the distance of the path. We will attempt to find close to optimal paths with minimal work.
+Given two Wikipedia pages the problem is to find a path (TODO: Define path) between the two, with rewards determined by the distance of the path and the number of nodes expanded.  Here, the number of nodes expanded is acting as a proxy for the amount of time taken to find the path; possible alternatives include the actual time taken and the number of links that we see (to simulate the fact that it takes a human longer to read all the links on a page with more links (although Mark Kong (what about everyone else?) believes that a skilled human probably would not be reading all those links)).
 
-\section{Approach}
+ \section{Approach}
 
 We intend to to use various search algorithms, as well as clustering, classification, and potentially learning to identify optimal weightings for various heuristics and find solutions as efficiently as possible.
 
-Initially, we will need to scrape and download as large a subset of Wikipedia as possible, and then a simple Breadth-First Search algorithm will be employed to find the optimal paths between various topics. Our goal will then be to refine a new algorithm that performs as efficiently as possible while sacrificing a minimal amount of optimality. To this end, we will try to explore and expand the efficient frontier between nodes expanded and loss relative to optimal solutions.
+Initially, we will need to scrape and download as large a subset of Wikipedia as possible (Why not use the API?), and then a simple Breadth-First Search algorithm will be employed to find the optimal paths between various topics. Our goal will then be to refine a new algorithm that performs as efficiently as possible while sacrificing a minimal amount of optimality. To this end, we will try to explore and expand the efficient frontier between nodes expanded and loss relative to optimal solutions.
 
 We will explore various algorithms to do so, but our research will primarily be focused towards greedy and A* search, and especially on coming up with efficient heuristics for distances between various topics. All heuristics will likely require us to consider a measure of distance between topics, while also trying to explore in the direction of topics with larger numbers of branching nodes. Topics with larger branching factors should allow us to find shorter solutions, though at the expense of additional node expansion if we move in an inefficient location (we can potentially use learning to come up with optimal weightings between opting for closer topics versus ones with more branches).
 
