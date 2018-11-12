@@ -24,7 +24,7 @@ there is a wide variety of possible paths. Our goal is to solve this game in as 
 
 There has been a small amount of theoretical work done on this subject. A list of various trivia can be found at \cite{https://en.wikipedia.org/wiki/Wikipedia:Six_degrees_of_Wikipedia}.  A multiplayer version of (one variant of) The Wikipedia game is free to play from www.thewikigame.com.
 
-The website \cite{www.sixdegreesofwikipedia.com} finds all paths of shortest length between any two Wikipedia pages using the Wikipedia API.  The algorithm it uses is Bidirectional BFS.
+The website \cite{www.sixdegreesofwikipedia.com} finds all paths of shortest length between any two Wikipedia pages using the Wikipedia API.  The algorithm it uses is Bidirectional BFS.  The website usually returns all shortest paths within 10 seconds, but we do not know how much of this time is for the algorithm to run and how much time is for everything else.
 
 Intuitively, we can model Wikipedia as a directed small-world network.  Several studies have been done regarding the speed of some shortest-path algorithms on small-world networks (see \cite{https://en.wikipedia.org/wiki/Small-world_routing}%TODO: Actually read this page; Also http://lsirwww.epfl.ch/courses/dis/2004ws/week%209%20Small%20World%20Graphs.pdf might be helpful
 and page 33 of \cite{http://www.cs.princeton.edu/~rs/talks/PathsInGraphs07.pdf}, which says that this is actually a heavily-studied problem).
