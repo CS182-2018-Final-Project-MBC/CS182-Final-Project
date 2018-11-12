@@ -9,7 +9,8 @@
 
 \section{Introduction}
 
-The Wikipedia game \cite{www.thewikigame.com} is a path-finding challenge where a player is presented with two disparate topics and is expected to find a path between the two using links between Wikipedia pages. Due to the interconnectedness of various topics and an extremely large branching factor, there are a large variety of possible paths, and the user is rewarded for finding as short a path as possible. Our goal is to solve this game in as efficient a manner as possible.
+The Wikipedia game \cite{www.thewikigame.com} is a path-finding challenge where a player is presented with two Wikipedia page titles and is asked to find a path between the two pages by clicking links to travel from article to article. The player's score is determined by the length of the path and the time it took to find the path (the weight each component plays in computing the final score depends on the variant being played). Due to the interconnectedness of various topics and moderately large branching factor,%Note: There's probably something like 30 links per page.  That's like chess.
+there is a wide variety of possible paths. Our goal is to solve this game in as efficient a manner as possible.
 
 %A description of the purpose, goals, and scope of your system or
 %empirical investigation.  You should include references to papers you
@@ -21,25 +22,38 @@ The Wikipedia game \cite{www.thewikigame.com} is a path-finding challenge where 
 
 \section{Background and Related Work}
 
-There has been a small amount of theoretical work done on this subject. The Wikipedia game itself is free to play from www.thewikigame.com, while there are websites online that will solve for crude solutions, such as \cite{www.sixdegreesofwikipedia.com}.
+There has been a small amount of theoretical work done on this subject. A list of various trivia can be found at \cite{https://en.wikipedia.org/wiki/Wikipedia:Six_degrees_of_Wikipedia}.  A multiplayer version of (one variant of) The Wikipedia game is free to play from www.thewikigame.com.
 
-There is also evidence that approaches such as combining DFS for several levels and then using BFS might be an effective solution (cite www.cs.princeton.edu/~rs/talks/PathsInGraphs07.pdf). We intend to build on this previous work and explore innovative new approaches using clustering algorithms and natural language processing.
+The website \cite{www.sixdegreesofwikipedia.com} finds all paths of shortest length between any two Wikipedia pages using the Wikipedia API.  The algorithm it uses is Bidirectional BFS.
+
+Intuitively, we can model Wikipedia as a directed small-world network.  Several studies have been done regarding the speed of some shortest-path algorithms on small-world networks (see \cite{https://en.wikipedia.org/wiki/Small-world_routing}%TODO: Actually read this page; Also http://lsirwww.epfl.ch/courses/dis/2004ws/week%209%20Small%20World%20Graphs.pdf might be helpful
+and page 33 of \cite{http://www.cs.princeton.edu/~rs/talks/PathsInGraphs07.pdf}, which says that this is actually a heavily-studied problem).
+
+The presentation \cite{www.cs.princeton.edu/~rs/talks/PathsInGraphs07.pdf) does an experiment on bidirection DFS, though on page 33 it refers to something related to Kleinberg in which A$^*$ search has a better time complexity than their experiments suggest bidirectional DFS give.%Searching ``kleinberg small world'' using Google gives plenty of things to read if we're bored and want to learn more.  So do ``kleinberg a* small world'' and ``jon kleinberg small world''.  Not sure how much overlap there is, but if we ever need to learn more, we can do that.
+We intend to build on this previous work and explore innovative new approaches using clustering algorithms and natural language processing.
 
 
 \section{Problem Specification}
 
-Specifically, given two Wikipedia entries the problem is to find a path between the two, with rewards determined by the distance of the path. We will attempt to find close to optimal paths with minimal work.
+Given two Wikipedia pages the problem is to find a path between the two, with rewards determined by the distance of the path and the number of nodes expanded.  Here, the number of nodes expanded is acting as a proxy for the amount of time taken to find the path; possible alternatives include the actual time taken and the number of links that we see (to simulate the fact that it takes a human longer to read all the links on a page with more links (although Mark Kong (what about everyone else?) believes that a skilled human probably would not be reading all those links)).
 
-\section{Approach}
+ \section{Approach}
 
-We intend to to use various search algorithms, as well as clustering, classification, and potentially learning to identify optimal weightings for various heuristics and find solutions as efficiently as possible.
+We intend to to use various search algorithms, together with clustering, classification, and potentially learning to identify optimal weightings for various heuristics and find solutions as efficiently as possible.  For consistent measurements across tests, we will generate [Some Number] random ordered pairs of Wikipedia pages to be used for all tests.
 
-Initially, we will need to scrape and download as large a subset of Wikipedia as possible, and then a simple Breadth-First Search algorithm will be employed to find the optimal paths between various topics. Our goal will then be to refine a new algorithm that performs as efficiently as possible while sacrificing a minimal amount of optimality. To this end, we will try to explore and expand the efficient frontier between nodes expanded and loss relative to optimal solutions.
+We will use the Wikipedia API to access information about Wikipedia pages.  For any given page, this gives us access to the set of pages that it links to (via links), the set of pages that link to it (via linkshere), and lots of other information.  We acknowledge that this is more information than we would get when usually playing The Wikipedia Game; for example, we would not be able to find out what pages link to a given page, or look at a random page.  A variant we may consider is one where we restrict ourselves to information we would have when actually playing the game.
 
-We will explore various algorithms to do so, but our research will primarily be focused towards greedy and A* search, and especially on coming up with efficient heuristics for distances between various topics. All heuristics will likely require us to consider a measure of distance between topics, while also trying to explore in the direction of topics with larger numbers of branching nodes. Topics with larger branching factors should allow us to find shorter solutions, though at the expense of additional node expansion if we move in an inefficient location (we can potentially use learning to come up with optimal weightings between opting for closer topics versus ones with more branches).
+%Originally, the idea was to scrape and download a bunch of Wikipedia.  Scraping sounds hard and slow (though if you do know of a fast way of doing this let me know; the fastest I can use code to access websites without parallelizing anything is 1-2 seconds per URL.) since we can download Wikipedia without that, though whether we can get a large subset that is not too large for our computers is another question.
 
-A significant challenge will be to come up with these measure of distance between various pages. We will potentially explore clustering based on pages with large numbers of inter-connections or similar connections, hierarchical sub-clustering, and NLP topic-modeling to come up with a variety of measures of distance, which we plan to evaluate relative to each other or in combination to find efficient algorithms.
+To get a benchmark for number of nodes expanded, number of links seen, and length of path, we will start with a simple breadth-first search algorithm.  (Therefore, the lengths of the paths found in the benchmark will be optimal.)  At this point, we can sort the random pairs in order of length of shortest path, so that we can see whether different algorithms do better on pairs that are farther apart or closer together. %Most pairs are already pretty close together; even finding pairs that are 7 apart is pretty hard.  So we might not really be able to find this.  Instead, maybe it would be better to sort by something like number of links seen, or number of nodes expanded, or something else.
 
+We will explore various algorithms to improve on breadth first search, but our research will primarily be focused towards greedy and A* search, and especially on coming up with efficient heuristics for distances between various topics. All heuristics will likely require us to consider a measure of distance between topics, while also trying to explore in the direction of topics with larger numbers of branching nodes. Topics with larger branching factors should allow us to find shorter solutions, though at the expense of additional node expansion if we move in an inefficient location (we can potentially use learning to come up with optimal weightings between opting for closer topics versus ones with more branches in different situations).
+
+For example, as suggested in \cite{www.cs.princeton.edu/~rs/talks/PathsInGraphs07.pdf}, we will try bidirectional depth first search.  (Note that the powerpoint presentation we are citing only did experiments on undirected graphs, while we will be dealing with a directed graph.)  For this, we could either keep track of all links we have ever seen, or we could just keep track of all nodes we have expanded plus the frontier.  The former approach will require expanding fewer nodes, but will take up much more space, and searching to see if we have found a path each time we expand a node will take longer.  A heuristic we could use would be to, for the forward search, go to pages that have more outgoing links, and for the backward search, go to pages that have more incoming links.
+
+A significant challenge will be to come up with these measures of distance between pages. We will potentially explore clustering based on pages with large numbers of inter-connections or similar connections, hierarchical sub-clustering, and NLP topic-modeling to come up with a variety of measures of distance, which we plan to evaluate relative to each other or in combination to find efficient algorithms.  Time-permitting, we will investigate if persistent homology can be used.
+
+We may also look for ways to use multilevel clustering.  In this case, we may also investigate a search algorithm taking advantage of the multilevel clustering.  A first algorithm involves searching for paths in the highest level of clustering and using those to induce paths in lower levels of clustering until we get a path using links.  %If we end up trying this approach, a paper we might want to read is https://ieeexplore.ieee.org/document/7529544.  Sounds like to me that this approach will require that we actually store all the nodes, so we might want to actually build the graph in this case.  Is adjacency list the best implementation for us?
 
 %A clear specification of the algorithm(s) you used and a description
 %of the main data structures in the implementation. Include a
@@ -62,7 +76,9 @@ A significant challenge will be to come up with these measure of distance betwee
 
 \section{System Description}
 
- Appendix 1 – We plan to download a large portion of the Wikipedia database, then setup a python tool which can be run with either randomly chosen topics, either uniformly or chosen to have specific properties (sufficiently far, sufficiently close, etc), or specified by the user. Our tool will then run a variety of approaches to find the optimal distance between the two, and then return the found paths to the user with information as to how much work was required before the path was found.
+ Appendix 1 – We plan to set up a python tool which can be run with ordered pairs of Wikipedia pages, either randomly chosen (either uniformly or chosen to have specific properties (sufficiently far, sufficiently close, etc)), or specified by the user. Our tool will then run a variety of approaches to find paths between the two, one of which will be optimal (and labelled so), and then return the found paths to the user with information as to how much work was required before the path was found.
+  
+  %I deleted the bit about downloading Wikipedia.  Change it back if we actually plan on downloading Wikipedia.
   
  %A clear description of how to use your system and how to generate the output you discussed in the write-up. \emph{The teaching staff must be able to run your system.}
 
