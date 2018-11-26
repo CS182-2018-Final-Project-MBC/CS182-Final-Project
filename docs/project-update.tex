@@ -31,8 +31,12 @@ We've downloaded Google's pre-trained word2vec word embeddings, and used the gen
 
 We've also refined our goal for the project to focus more on the irreversibility inherent in the rules of the Wikipedia game. Technically no backtracking is allowed, so for our initial approach we've emphasized identifying useful heuristics to efficiently navigate in the correct direction towards our target page.
 
+\section{First Attempts}
+We have successfully combined Wikipedia scraping and word2vec to implement a greedy search that has so far yielded promising results for simple topics. By implementing a priority queue based on the average distance between the words in an article title and the goal node we have been able to successfully find paths between a small number of sample topics, although the lengths of our paths have varied widely from as little as ten to as many as forty steps.
+
 \section{Problems}
 
-The extremely large size of the Wikipedia database (~16 GB compressed) makes working with it challenging in a variety of ways. A particular one is how to use clustering to determine groups and distances between topics given the scale of the dataset.
+The extremely large size of the Wikipedia database (~16 GB compressed) makes working with it challenging in a variety of ways. A particular one is how to use clustering to determine groups and distances between topics given the scale of the dataset. We will also need to consider how to deal with pages that are combinations of words or phrases, such as "Natural Environment" rather than "Environment", or topics that are not identifiable English words, such as "Vostok 1".
+
 
 \end{document}
