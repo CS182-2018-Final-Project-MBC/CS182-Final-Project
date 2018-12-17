@@ -1,5 +1,10 @@
 import numpy as np
 
+exclusions = ("Category:", "Wikipedia:", "Help:", "Talk:", "Template:", "Template talk:", "Portal:", "File:")
+
+def valid_page(title):
+    return not title.startswith(exclusions)
+
 # Currently uses average word distances from word2vec embeddings
 def get_distance(topic, model, goal, option="combined"):
     # combined, min, and average
@@ -24,6 +29,9 @@ def process_word(topic, model, combine_phrases=True):
     
     if topic in model:
         return [topic]
+
+    # topic = topic.replace('-', ' ')
+
 
     output = []
     words = topic.split(' ')
