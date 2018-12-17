@@ -49,7 +49,7 @@ def process_word(topic, model, combine_phrases=True):
     return output + process_word(' '.join(words[1:]), model, combine_phrases)
 
 
-def get_samples():
+def get_old_samples():
     return [("speech", "lacrosse"), ("mantra", "dna"), ("Parthenon", "Natural Environment"), ("Feces", "Poet"),
 #             ("penguin", "sans-serif"),  #sans-serif is not in the dictionary
             ("angelina jolie", "nitrogen"),("Carrie Fisher", "Death of Adolf Hitler"),("Lacrosse", "Comedian"),
@@ -96,3 +96,46 @@ def get_samples():
             ("Wesley Snipes","Computer science"),
             ("Airline","Bavaria"),
             ("Nevada","Maltose")]
+
+article_titles = ['Southern Europe', 'United Nations Charter', 'Climate', "Alzheimer's disease", 'Mountain', 'Fashion', 
+              'Bipolar junction transistor', 'Web search engine', 'Bosnia and Herzegovina', 'Transhumanism',
+              'Ecology', 'War of 1812', 'Periodic table', 'Gastroesophageal reflux disease', 'Osama bin Laden',
+              'Brown Bear', 'Documentary film', 'Stock market', 'Caroline Kennedy', 'Nevada',
+              'Food and Drug Administration', 'Satire', 'Saturn', 'Rhodesia', 'Yellowstone National Park',
+              'Megalodon', 'Chemical reaction', 'Lactose intolerance', 'Charles Bronson', 'Profession', 
+              'Cologne', 'Dimension', 'RNA', 'Dancing with the Stars', 'List of U.S. states and territories by area', 
+              'Southern California', 'Celsius', 'Envy', 'Humid subtropical climate', 'James II of England', 'Jacob',
+              'Pulmonary embolism', 'Romanticism', 'Vermont', 'Ethernet', 'Written language', 'Early Middle Ages',
+              'Google Chrome', 'Apple Lisa', 'Latitude', 'Will Smith', 'Frank Gehry', 'Technology', 'Jules Verne',
+              'Luciano Pavarotti', 'Auto racing', 'Electron', 'Matter', 'Periodic table', 'Breakfast', 'Ghetto',
+              'Ashley Massaro', 'Pathology', 'Ballet', 'Bacteria', 'Persecution of Christians', 'Earth', 'Lead',
+              'Jim Carrey', 'Americans', 'Coaxial cable', 'First language', 'Memory', 'Francis Ford Coppola',
+              'Mel Gibson', 'Saxophone', 'Constantinople', 'Train', 'Birdman (rapper)', 'Adolf Hitler', 
+              'Sociology', 'African-American music', 'Internal combustion engine', 'Eurozone', 'William Shakespeare',
+              'Polynesia', 'Copyright infringement', 'Prince (musician)', 'Taxonomy (biology)', 'Apple Lisa', 
+              'Metaphysics', 'Pistol', 'Euro', 'Prussia', 'Armageddon', 'Bruce Lee', 'Brain tumor', 'Sheep', 
+              'Dance music', 'Embedded system', 'J. R. R. Tolkien', 'Ornithology', 'Winter War', 
+              'Personal digital assistant', 'Al-Qaeda', 'Mark Wahlberg', 'Bourbon whiskey', 'Four Tops', 'Tomato',
+              'Potato', 'Mathematics', 'Kidney', 'Americans', 'Chimpanzee',
+              'speech','lacrosse','mantra','dna','Parthenon','Natural Environment','Feces','Poet','angelina jolie',
+              'nitrogen','Carrie Fisher','Death of Adolf Hitler','Lacrosse','Comedian','Dictionary',
+              'Atmosphere of Earth','Broadway theatre','Wall Street','Life expectancy','Graphical User Interface',
+              'Diazepam','Death','Moors', 'Aryan','Michelangelo','Horror Fiction','Jim Henson','Gin',
+              'Continental Army','Computer Multitasking','World Health Organization','Ecosystem','Blood pressure',
+              'Mathematics','War of 1812','Queens of the Stone Age','Onomatopoeia','Wiki','Church of England',
+              'Joan Baez','Nuclear Power','Canadians','Multi-sport event','Ku Klux Klan','Pony Express','Augustus',
+              'Organization','Parthenon','Battleship','Dream','The Cosby Show','Marine biology','DNA replication',
+              'Muscle car','Mammal','Montreal','River','Engine','Louis Armstrong','Nuclear Power','Entertainment',
+              'Ralph Waldo Emerson','Bilirubin','Architecture','Association football', 'Axis powers','World Series',
+              'Nuclear warfare','Sherlock Holmes','Magnetic resonance imaging','Waterboarding','World War II',
+              'World Trade Organization','Ant','Printed circuit board','Typhoid fever','Statistics','Renaissance',
+              'Radio','Personal computer','Bette Midler','Jellyfish','Sigmund Freud','Vacuum','Credit card',
+              'String theory','Radiohead','Magnetic field','Biosphere','Nobel Prize in Physiology or Medicine',
+              'Mick Jagger','Knife','West Indies','Gastroesophageal reflux disease','Wesley Snipes',
+              'Computer science','Airline','Bavaria','Nevada','Maltose']
+
+def get_samples(n, seed=42):
+    assert n <= len(article_titles) // 2, "Not enough sample pages to return {} unique pairs.".format(n)
+    np.random.seed(seed)
+    words = np.random.choice(article_titles, size=n*2, replace=False)
+    return [(w1, w2) for w1, w2 in zip(words[:n], words[n:])]
