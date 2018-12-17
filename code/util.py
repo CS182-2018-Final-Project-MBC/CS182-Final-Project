@@ -5,6 +5,7 @@ exclusions = ("Category:", "Wikipedia:", "Help:", "Talk:", "Template:", "Templat
 def valid_page(title):
     return not title.startswith(exclusions)
 
+
 # Currently uses average word distances from word2vec embeddings
 def get_distance(topic, model, goal, option="combined"):
     # combined, min, and average
@@ -46,3 +47,52 @@ def process_word(topic, model, combine_phrases=True):
     if words[0] in model:
         output.append(words[0])
     return output + process_word(' '.join(words[1:]), model, combine_phrases)
+
+
+def get_samples():
+    return [("speech", "lacrosse"), ("mantra", "dna"), ("Parthenon", "Natural Environment"), ("Feces", "Poet"),
+#             ("penguin", "sans-serif"),  #sans-serif is not in the dictionary
+            ("angelina jolie", "nitrogen"),("Carrie Fisher", "Death of Adolf Hitler"),("Lacrosse", "Comedian"),
+            ("Dictionary", "Atmosphere of Earth"),
+            ("Broadway theatre", "Wall Street"),
+            ("Life expectancy", "Graphical User Interface"),
+            ("Diazepam", "Death"),
+            ("Moors", "Aryan"),
+            ("Michelangelo", "Horror Fiction"),
+            ("Jim Henson", "Gin"),
+            ("Continental Army", "Computer Multitasking"),
+            ("World Health Organization", "Ecosystem"),
+            ("Blood pressure", "Mathematics"),
+            ("War of 1812", "Queens of the Stone Age"),
+            ("Onomatopoeia", "Wiki"),
+            ("Church of England", "Joan Baez"),
+            ("Nuclear Power", "Canadians"),
+            ("Multi-sport event", "Ku Klux Klan"),
+            ("Pony Express", "Augustus"),
+            ("Organization", "Parthenon"),
+            ("Battleship", "Dream"),
+            ("The Cosby Show", "Marine biology"),
+            ("DNA replication", "Muscle car"),
+            ("Mammal", "Montreal"),
+            ("River", "Engine"),
+            ("Louis Armstrong", "Nuclear Power"),
+            ("Entertainment", "Ralph Waldo Emerson"),
+            ("Bilirubin", "Architecture"),
+            ("Association football", "Axis powers"),
+            ("World Series", "Nuclear warfare"),
+            ("Sherlock Holmes","Magnetic resonance imaging"),
+            ("Waterboarding","World War II"),
+            ("World Trade Organization", "Ant"),
+            ("Printed circuit board", "Typhoid fever"),
+            ("Statistics","Renaissance"),
+            ("Radio","Personal computer"),
+            ("Bette Midler","Jellyfish"),
+            ("Sigmund Freud","Vacuum"),
+            ("Credit card","String theory"),
+            ("Radiohead","Magnetic field"),
+            ("Biosphere","Nobel Prize in Physiology or Medicine"),
+            ("Mick Jagger","Knife"),
+            ("West Indies","Gastroesophageal reflux disease"),
+            ("Wesley Snipes","Computer science"),
+            ("Airline","Bavaria"),
+            ("Nevada","Maltose")]
