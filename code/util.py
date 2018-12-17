@@ -1,6 +1,6 @@
 import numpy as np
 
-exclusions = ("Category:", "Wikipedia:", "Help:", "Talk:", "Template:", "Template talk:", "Portal:", "File:")
+exclusions = ("Book:", "Book Talk:", "Category:", "Category Talk:", "Wikipedia:", "Wikipedia Talk", "Help:", "Talk:", "Template:", "Template talk:", "Portal:", "File:", "Module:", "User:", "User Talk:", "Draft Talk:", "List of")
 
 def valid_page(title):
     return not title.startswith(exclusions)
