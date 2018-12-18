@@ -31,7 +31,7 @@ def process_word(topic, model, combine_phrases=True):
     if topic in model:
         return [topic]
 
-    # topic = topic.replace('-', ' ')
+    topic = topic.replace('-', ' ')
 
 
     output = []
